@@ -1,9 +1,23 @@
-document.getElementById("matchForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const team1 = document.getElementById("team1").value;
-  const team2 = document.getElementById("team2").value;
+document.getElementById("generate").addEventListener("click", async () => {
+    const team1 = document.getElementById("team1").value;
+    const team2 = document.getElementById("team2").value;
 
-  const response = await fetch(`/api/parley?team1=${team1}&team2=${team2}`);
-  const data = await response.json();
-  document.getElementById("result").textContent = JSON.stringify(data, null, 2);
+    const url = `https://api-football-v1.p.rapidapi.com/v3/fixtures/headtohead?h2h=${team1}-${team2}`;
+
+    const options = {
+        method: "GET",
+        headers: {
+            "X-RapidAPI-Key": "TU_API_KEY_AQUI",
+            "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com"
+        }
+    };
+
+    try {
+        const response = await fetch(url, options);
+        const result = await response.json();
+        document.getElementById("result").textContent = JSON.stringify(result, null, 2);
+    } catch (error) {
+        document.getElementById("result").textContent = "Error al obtener datos.";
+        console.error(error);
+    }
 });
